@@ -1,0 +1,70 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Lead {
+  id             Int      @id @default(autoincrement())
+  name           String
+  phone          String
+  email          String?
+  interest       String?
+  sourcePage     String?
+  propertyType   String?
+  investmentBand String?
+  message        String?  @db.Text
+  crmStatus      String   @default("pending")
+  crmResponse    String?  @db.Text
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  @@map("leads")
+}
+
+model Property {
+  id              Int             @id @default(autoincrement())
+  title           String
+  slug            String          @unique
+  propertyType    String
+  category        String
+  status          String          @default("available")
+  city            String
+  neighborhood    String?
+  address         String?
+  price           Decimal?        @db.Decimal(12, 2)
+  area            Int?
+  bedrooms        Int?
+  suites          Int?
+  bathrooms       Int?
+  parkingSpaces   Int?
+  description     String?         @db.Text
+  highlights      String?         @db.Text
+  isFeatured      Boolean         @default(false)
+  isLuxury        Boolean         @default(false)
+  isLaunch        Boolean         @default(false)
+  crmCode         String?
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+
+  images          PropertyImage[]
+
+  @@map("properties")
+}
+
+model PropertyImage {
+  id          Int      @id @default(autoincrement())
+  propertyId  Int
+  url         String
+  alt         String?
+  order       Int      @default(0)
+  isCover     Boolean  @default(false)
+  createdAt   DateTime @default(now())
+
+  property    Property @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+
+  @@map("property_images")
+}

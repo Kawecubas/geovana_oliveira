@@ -1,0 +1,114 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: light;
+
+  --color-cafe: #2b1e17;
+  --color-marrom: #4b3428;
+  --color-champagne: #d8c39a;
+  --color-ouro: #b99655;
+  --color-bege: #f4efe7;
+  --color-bege-claro: #fffdf8;
+  --color-areia: #d7c8b8;
+  --color-oliva: #3f4735;
+  --color-texto: #2b1e17;
+  --color-texto-suave: #6f6258;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  background: var(--color-bege);
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background:
+    radial-gradient(circle at top left, rgba(216, 195, 154, 0.20), transparent 34rem),
+    radial-gradient(circle at bottom right, rgba(63, 71, 53, 0.10), transparent 34rem),
+    linear-gradient(180deg, #fffdf8 0%, #f4efe7 48%, #eee2d2 100%);
+  color: var(--color-texto);
+  font-family: Inter, Arial, sans-serif;
+  text-rendering: geometricPrecision;
+}
+
+a {
+  text-decoration: none;
+}
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
+}
+
+::selection {
+  background: var(--color-champagne);
+  color: var(--color-cafe);
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-bege);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-marrom);
+  border-radius: 999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-cafe);
+}
+
+@layer components {
+  .premium-section {
+    @apply mx-auto max-w-7xl px-6 py-20 lg:px-10;
+  }
+
+  .premium-eyebrow {
+    @apply text-sm font-semibold uppercase tracking-[0.32em] text-ouroFosco;
+  }
+
+  .premium-title {
+    @apply text-4xl font-semibold leading-tight text-cafe md:text-6xl;
+  }
+
+  .premium-subtitle {
+    @apply mt-5 max-w-2xl text-lg leading-8 text-textoSuave;
+  }
+
+  .premium-card {
+    @apply rounded-[2rem] border border-areia/70 bg-begeClaro shadow-card transition duration-300 hover:-translate-y-1 hover:shadow-premium;
+  }
+
+  .premium-button {
+    @apply inline-flex items-center justify-center rounded-full bg-ouro px-7 py-4 font-semibold text-white shadow-soft transition duration-300 hover:bg-ouroFosco hover:shadow-card;
+  }
+
+  .premium-button-dark {
+    @apply inline-flex items-center justify-center rounded-full bg-cafe px-7 py-4 font-semibold text-champagne shadow-soft transition duration-300 hover:bg-marrom;
+  }
+
+  .premium-button-outline {
+    @apply inline-flex items-center justify-center rounded-full border border-champagne/70 px-7 py-4 font-semibold text-champagne transition duration-300 hover:bg-champagne hover:text-cafe;
+  }
+
+  .premium-input {
+    @apply w-full rounded-2xl border border-areia bg-white px-4 py-3 text-cafe outline-none transition focus:border-ouro focus:ring-4 focus:ring-ouro/20;
+  }
+
+  .premium-label {
+    @apply text-sm font-semibold text-cafe;
+  }
+}
