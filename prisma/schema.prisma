@@ -3,7 +3,7 @@ generator client {
 }
 
 datasource db {
-  provider = "mysql"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
@@ -16,9 +16,9 @@ model Lead {
   sourcePage     String?
   propertyType   String?
   investmentBand String?
-  message        String?  @db.Text
+  message        String?
   crmStatus      String   @default("pending")
-  crmResponse    String?  @db.Text
+  crmResponse    String?
   createdAt      DateTime @default(now())
   updatedAt      DateTime @updatedAt
 
@@ -41,8 +41,8 @@ model Property {
   suites          Int?
   bathrooms       Int?
   parkingSpaces   Int?
-  description     String?         @db.Text
-  highlights      String?         @db.Text
+  description     String?
+  highlights      String?
   isFeatured      Boolean         @default(false)
   isLuxury        Boolean         @default(false)
   isLaunch        Boolean         @default(false)
