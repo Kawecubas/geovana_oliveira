@@ -1,0 +1,29 @@
+Correções aplicadas neste pacote:
+
+1. Corrigido o import errado do SiteShell no app/layout.tsx:
+   de '@/components/Footer' para '@/components/SiteShell'.
+
+2. Criado/mantido o components/SiteShell.tsx para ocultar Header, Footer e FloatingWhatsapp na rota /lp-empreendimentos.
+
+3. Atualizada a landing page app/lp-empreendimentos/page.tsx:
+   - removido header interno;
+   - adicionadas imagens no hero;
+   - adicionados cards com logos dos empreendimentos;
+   - adicionada seção de galeria com carrossel importado.
+
+4. Mantidos os componentes importáveis:
+   - components/EmpreendimentoCarousel.tsx
+   - components/empreendimentos-data.ts
+
+5. Imagens movidas para a pasta correta do Next.js:
+   public/empreendimentos/...
+
+6. Corrigido app/globals.css para Tailwind 4 com @import "tailwindcss" e tokens @theme.
+
+Observação:
+Este ZIP não inclui node_modules, .next, .git nem .env.local. Após extrair, rode:
+
+npm install
+npm run dev
+
+Se já possuir um .env.local, mantenha o seu arquivo local.

@@ -1,8 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import { Header } from "@/components/Header";
-import { Footer } from "@/components/Footer";
-import { FloatingWhatsapp } from "@/components/FloatingWhatsapp";
+import { SiteShell } from "@/components/SiteShell";
 
 export const metadata: Metadata = {
   title: "Geovana de Oliveira Imóveis | Alto Padrão e Lançamentos",
@@ -18,10 +16,7 @@ export default function RootLayout({
   return (
     <html lang="pt-BR">
       <body>
-        <Header />
-        {children}
-        <Footer />
-        <FloatingWhatsapp />
+        <SiteShell>{children}</SiteShell>
       </body>
     </html>
   );
