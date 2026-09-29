@@ -4,7 +4,8 @@ import { LeadForm } from "@/components/LeadForm";
 import { escolas } from "@/lib/imoveis-escolas";
 
 export const metadata: Metadata = {
-  title: "Imóveis perto das melhores escolas de Joinville | Geovana de Oliveira Imóveis",
+  robots: { index: false, follow: false },
+  title: "Curadoria exclusiva para a Bianca | Geovana de Oliveira Imóveis",
   description:
     "Mapa de apartamentos e casas de alto padrão em Joinville com a distância até Bonja, Positivo, Santos Anjos, Coree e outros colégios particulares.",
 };
@@ -15,14 +16,14 @@ export default function ImoveisPertoDeEscolasPage() {
       <section className="bg-gradient-to-br from-cafe via-marrom to-[#8A6A3D] px-4 py-14 text-begeClaro sm:px-6 lg:px-10 lg:py-20">
         <div className="mx-auto max-w-7xl">
           <p className="text-xs font-semibold uppercase tracking-[0.3em] text-ouro sm:text-sm">
-            Curadoria para famílias
+            Curadoria exclusiva · Joinville
           </p>
           <h1 className="mt-4 max-w-4xl text-3xl font-semibold leading-tight sm:text-4xl md:text-6xl">
-            Imóveis de alto padrão perto das melhores escolas de Joinville
+            Bianca, segue uma curadoria das melhores opções para sua família
           </h1>
           <p className="mt-5 max-w-2xl text-base leading-7 text-bege/85 sm:text-lg sm:leading-8">
-            Filtre por bairro, metragem, número de quartos e distância até o colégio dos seus filhos. Veja tudo no mapa e
-            fale direto com a Geovana.
+            Imóveis de alto padrão selecionados perto das melhores escolas de Joinville. Filtre por bairro, metragem,
+            quartos e distância até o colégio, veja tudo no mapa e fale direto com a Geovana.
           </p>
         </div>
       </section>
