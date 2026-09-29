@@ -13,16 +13,26 @@ export function PaginaImoveisEscolas({ eyebrow, titulo, descricao, origem }: Pro
   return (
     <main className="bg-bege text-cafe">
       <section className="bg-gradient-to-br from-cafe via-marrom to-[#8A6A3D] px-4 py-14 text-begeClaro sm:px-6 lg:px-10 lg:py-20">
-        <div className="mx-auto max-w-7xl">
-          <p className="text-xs font-semibold uppercase tracking-[0.3em] text-ouro sm:text-sm">
-            {eyebrow}
-          </p>
-          <h1 className="mt-4 max-w-4xl text-3xl font-semibold leading-tight sm:text-4xl md:text-6xl">
-            {titulo}
-          </h1>
-          <p className="mt-5 max-w-2xl text-base leading-7 text-bege/85 sm:text-lg sm:leading-8">
-            {descricao}
-          </p>
+        <div className="mx-auto flex max-w-7xl flex-col-reverse gap-8 md:flex-row md:items-center md:justify-between md:gap-12">
+          <div className="md:max-w-3xl">
+            <p className="text-xs font-semibold uppercase tracking-[0.3em] text-ouro sm:text-sm">
+              {eyebrow}
+            </p>
+            <h1 className="mt-4 text-3xl font-semibold leading-tight sm:text-4xl md:text-5xl lg:text-6xl">
+              {titulo}
+            </h1>
+            <p className="mt-5 max-w-2xl text-base leading-7 text-bege/85 sm:text-lg sm:leading-8">
+              {descricao}
+            </p>
+          </div>
+          <div className="w-44 shrink-0 self-start rounded-[1.5rem] bg-begeClaro p-4 shadow-premium sm:w-56 md:w-72 md:self-center md:rounded-[2rem] md:p-6">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src="/images/logo-geovana.png"
+              alt="Geovana de Oliveira Imóveis · CRECI 43844"
+              className="h-auto w-full"
+            />
+          </div>
         </div>
       </section>
 
