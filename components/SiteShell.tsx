@@ -12,7 +12,7 @@ export function SiteShell({
 }) {
   const pathname = usePathname();
 
-  const hideLayoutRoutes = ["/lp-empreendimentos"];
+  const hideLayoutRoutes = ["/lp-empreendimentos", "/ara-entre-jardins"];
 
   const hideLayout = hideLayoutRoutes.includes(pathname);
 
