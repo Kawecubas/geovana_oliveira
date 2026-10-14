@@ -217,6 +217,8 @@ export function MapaImoveisEscolas() {
             <span className={rotulo}>Metragem</span>
             <select className={campo} value={areaMin} onChange={(e) => setAreaMin(Number(e.target.value))}>
               <option value={0}>Qualquer</option>
+              <option value={150}>150 m² ou mais</option>
+              <option value={180}>180 m² ou mais</option>
               <option value={200}>200 m² ou mais</option>
               <option value={230}>230 m² ou mais</option>
               <option value={250}>250 m² ou mais</option>
