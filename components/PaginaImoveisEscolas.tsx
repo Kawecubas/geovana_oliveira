@@ -10,9 +10,11 @@ type Props = {
   origem: string;
   /** Nome no centro do mapa mental; quando informado, a página vira consulta guiada. */
   guiadaPara?: string;
+  /** Botão no banner levando à outra versão da página. */
+  linkAlternativo?: { href: string; texto: string };
 };
 
-export function PaginaImoveisEscolas({ eyebrow, titulo, descricao, origem, guiadaPara }: Props) {
+export function PaginaImoveisEscolas({ eyebrow, titulo, descricao, origem, guiadaPara, linkAlternativo }: Props) {
   return (
     <main className="bg-bege text-cafe">
       <section className="bg-gradient-to-br from-cafe via-marrom to-[#8A6A3D] px-4 py-14 text-begeClaro sm:px-6 lg:px-10 lg:py-20">
@@ -27,6 +29,14 @@ export function PaginaImoveisEscolas({ eyebrow, titulo, descricao, origem, guiad
             <p className="mt-5 max-w-2xl text-base leading-7 text-bege/85 sm:text-lg sm:leading-8">
               {descricao}
             </p>
+            {linkAlternativo && (
+              <a
+                href={linkAlternativo.href}
+                className="mt-6 inline-flex rounded-full bg-champagne px-5 py-3 text-sm font-semibold text-cafe shadow-soft hover:bg-ouro"
+              >
+                {linkAlternativo.texto}
+              </a>
+            )}
           </div>
           <div className="w-44 shrink-0 self-start rounded-[1.5rem] bg-begeClaro p-4 shadow-premium sm:w-56 md:w-72 md:self-center md:rounded-[2rem] md:p-6">
             {/* eslint-disable-next-line @next/next/no-img-element */}
