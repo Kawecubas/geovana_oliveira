@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
-import { escolas, imoveis, distanciaMetros, type Imovel } from "@/lib/imoveis-escolas";
+import { escolas, imoveis, distanciaMetros, VALOR_DESTAQUE, type Imovel } from "@/lib/imoveis-escolas";
 import { getWhatsappUrl } from "@/lib/site";
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
@@ -57,6 +57,7 @@ export function MapaImoveisEscolas() {
   const [escolaId, setEscolaId] = useState("");
   const [distMax, setDistMax] = useState(2000);
   const [ordem, setOrdem] = useState<"preco" | "distancia" | "area">("preco");
+  const [soDestaque, setSoDestaque] = useState(false);
   const [mapaPronto, setMapaPronto] = useState(false);
   const [erroMapa, setErroMapa] = useState(false);
 
@@ -83,6 +84,7 @@ export function MapaImoveisEscolas() {
       .filter((i) => bairro === "todos" || i.bairro === bairro)
       .filter((i) => i.area >= areaMin)
       .filter((i) => i.dormitorios >= dormMin)
+      .filter((i) => !soDestaque || i.preco < VALOR_DESTAQUE)
       .filter((i) => !escolaSelecionada || (i.distanciaEscolaFiltro ?? 0) <= distMax);
 
     return itens.sort((a, b) => {
@@ -94,7 +96,7 @@ export function MapaImoveisEscolas() {
       }
       return a.preco - b.preco;
     });
-  }, [bairro, areaMin, dormMin, escolaSelecionada, distMax, ordem]);
+  }, [bairro, areaMin, dormMin, escolaSelecionada, distMax, ordem, soDestaque]);
 
   // Cria o mapa uma vez
   useEffect(() => {
@@ -154,7 +156,7 @@ export function MapaImoveisEscolas() {
     lista.forEach((i) => {
       const icone = L.divIcon({
         className: "",
-        html: `<div style="background:#4B3428;color:#FFFDF8;border:2px solid #FFFDF8;border-radius:9999px;padding:4px 10px;font:600 12px Inter,Arial,sans-serif;white-space:nowrap;box-shadow:0 4px 12px rgba(43,30,23,.35)">${(i.preco / 1_000_000).toFixed(2).replace(".", ",")} mi</div>`,
+        html: `<div style="background:${i.preco < VALOR_DESTAQUE ? "#A9823F" : "#4B3428"};color:#FFFDF8;border:2px solid #FFFDF8;border-radius:9999px;padding:4px 10px;font:600 12px Inter,Arial,sans-serif;white-space:nowrap;box-shadow:0 4px 12px rgba(43,30,23,.35)">${(i.preco / 1_000_000).toFixed(2).replace(".", ",")} mi</div>`,
         iconSize: [72, 26],
         iconAnchor: [36, 13],
       });
@@ -164,7 +166,7 @@ export function MapaImoveisEscolas() {
           : `${distTexto(i.escolaMaisProxima.distancia)} do ${i.escolaMaisProxima.nome}`;
       const m = L.marker([i.lat, i.lng], { icon: icone, zIndexOffset: 1000 })
         .bindPopup(
-          `<div style="width:220px"><img src="${i.foto}" alt="${i.titulo}" style="width:220px;height:130px;object-fit:cover;border-radius:10px"/><div style="margin-top:8px;font:600 15px Inter,Arial,sans-serif">${i.titulo}</div><div style="font:13px Inter,Arial,sans-serif;color:#6F6258">${i.tipo} · ${i.bairro}</div><div style="margin-top:4px;font:700 15px Inter,Arial,sans-serif">${moeda(i.preco)}</div><div style="font:13px Inter,Arial,sans-serif">${i.area} m² · ${i.dormitorios} dorm. (${i.suites} suítes) · ${i.vagas} vagas</div><div style="margin-top:4px;font:12px Inter,Arial,sans-serif;color:#6F6258">${distTxt} (linha reta)</div><a href="${i.link}" target="_blank" rel="noopener" style="display:inline-block;margin-top:8px;font:600 13px Inter,Arial,sans-serif;color:#A9823F">Ver fotos e anúncio →</a></div>`
+          `<div style="width:220px"><img src="${i.foto}" alt="${i.titulo}" style="width:220px;height:130px;object-fit:cover;border-radius:10px"/><div style="margin-top:8px;font:600 15px Inter,Arial,sans-serif">${i.titulo}</div><div style="font:13px Inter,Arial,sans-serif;color:#6F6258">${i.tipo} · ${i.bairro}</div><div style="margin-top:4px;font:700 15px Inter,Arial,sans-serif">${moeda(i.preco)}</div>${i.preco < VALOR_DESTAQUE ? '<div style="display:inline-block;margin-top:4px;background:#A9823F;color:#FFFDF8;border-radius:9999px;padding:2px 8px;font:600 11px Inter,Arial,sans-serif">Abaixo de R$ 2 mi</div>' : ""}<div style="font:13px Inter,Arial,sans-serif">${i.area} m² · ${i.dormitorios} dorm. (${i.suites} suítes) · ${i.vagas} vagas</div><div style="margin-top:4px;font:12px Inter,Arial,sans-serif;color:#6F6258">${distTxt} (linha reta)</div><a href="${i.link}" target="_blank" rel="noopener" style="display:inline-block;margin-top:8px;font:600 13px Inter,Arial,sans-serif;color:#A9823F">Ver fotos e anúncio →</a></div>`
         )
         .addTo(camadaImoveis.current);
       marcadores.current[i.codigo] = m;
@@ -191,6 +193,7 @@ export function MapaImoveisEscolas() {
     setEscolaId("");
     setDistMax(2000);
     setOrdem("preco");
+    setSoDestaque(false);
   }
 
   const campo =
@@ -265,7 +268,16 @@ export function MapaImoveisEscolas() {
             <strong className="text-cafe">{lista.length}</strong> de {imoveis.length} imóveis
             {escolaSelecionada ? ` a até ${distTexto(distMax)} do ${escolaSelecionada.nome}` : ""}
           </p>
-          <div className="flex items-center gap-3">
+          <div className="flex flex-wrap items-center gap-3">
+            <label className="flex cursor-pointer items-center gap-2 rounded-full border border-ouroFosco/60 bg-champagne/40 px-4 py-2 text-sm font-semibold text-cafe">
+              <input
+                type="checkbox"
+                className="h-4 w-4 accent-[#A9823F]"
+                checked={soDestaque}
+                onChange={(e) => setSoDestaque(e.target.checked)}
+              />
+              Só abaixo de R$ 2 mi
+            </label>
             <select
               aria-label="Ordenar"
               className="rounded-full border border-areia bg-begeClaro px-4 py-2 text-sm text-cafe"
@@ -294,6 +306,7 @@ export function MapaImoveisEscolas() {
               </p>
             )}
             <div className="pointer-events-none absolute bottom-3 left-3 flex flex-wrap gap-2 text-xs font-semibold">
+              <span className="rounded-full bg-[#A9823F] px-3 py-1 text-begeClaro shadow-soft">Abaixo de R$ 2 mi</span>
               <span className="rounded-full bg-marrom px-3 py-1 text-begeClaro shadow-soft">Imóvel (preço)</span>
               <span className="rounded-full bg-champagne px-3 py-1 text-cafe shadow-soft">E · Colégio</span>
             </div>
@@ -309,10 +322,21 @@ export function MapaImoveisEscolas() {
           {lista.map((i) => {
             const dist = i.distanciaEscolaFiltro ?? i.escolaMaisProxima.distancia;
             const nomeEscola = escolaSelecionada ? escolaSelecionada.nome : i.escolaMaisProxima.nome;
+            const destaque = i.preco < VALOR_DESTAQUE;
             return (
-              <article key={i.codigo} className="flex flex-col overflow-hidden rounded-[1.5rem] bg-begeClaro shadow-soft">
+              <article
+                key={i.codigo}
+                className={`relative flex flex-col overflow-hidden rounded-[1.5rem] bg-begeClaro shadow-soft ${
+                  destaque ? "ring-2 ring-[#A9823F]" : ""
+                }`}
+              >
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img src={i.foto} alt={i.titulo} loading="lazy" className="h-48 w-full object-cover" />
+                {destaque && (
+                  <span className="absolute left-3 top-3 rounded-full bg-[#A9823F] px-3 py-1 text-xs font-semibold uppercase tracking-[0.12em] text-begeClaro shadow-soft">
+                    Abaixo de R$ 2 mi
+                  </span>
+                )}
                 <div className="flex flex-1 flex-col gap-2 p-5">
                   <p className="text-xs font-semibold uppercase tracking-[0.18em] text-ouroFosco">
                     {i.tipo} · {i.bairro}

@@ -34,6 +34,7 @@ export type Imovel = {
   lng: number;
   aproximado?: boolean;
   ativo?: boolean; // false = inativo (não aparece na página, mas fica no cadastro)
+  incluirAbaixoDaArea?: boolean; // exceção ao corte de AREA_MINIMA (pedido da cliente)
 };
 
 export const escolas: Escola[] = [
@@ -52,8 +53,12 @@ export const escolas: Escola[] = [
 
 const foto = (codigo: string) => `/imoveis-escolas/${codigo}.jpg`;
 
-// Só aparecem na página imóveis ativos com área privativa a partir de AREA_MINIMA.
+// Só aparecem na página imóveis ativos com área privativa a partir de AREA_MINIMA
+// (ou marcados com incluirAbaixoDaArea).
 export const AREA_MINIMA = 145;
+
+// Imóveis abaixo deste valor ganham destaque na página.
+export const VALOR_DESTAQUE = 2_000_000;
 
 export const todosImoveis: Imovel[] = [
   { codigo: "72756", titulo: "Edifício Bahamas", tipo: "Apartamento", bairro: "América", rua: "Rua Itaiópolis", preco: 1200000, area: 191, dormitorios: 4, suites: 3, vagas: 3, condominio: 1800, iptu: 3560, destaque: "Dois apartamentos por andar, ventilação cruzada, reformado e semimobiliado.", link: "http://v.imo.bi/wSYzkVihLbvRT", foto: foto("72756"), lat: -26.287756, lng: -48.846287 },
@@ -81,10 +86,10 @@ export const todosImoveis: Imovel[] = [
   { codigo: "66686", titulo: "Edifício Helbor Victória", tipo: "Apartamento", bairro: "Centro", rua: "Rua Pastor Fritz Buhler", preco: 1950000, area: 162, dormitorios: 3, suites: 3, vagas: 3, iptu: 2115, destaque: "15º andar, três suítes e sacada integrada com churrasqueira.", link: "http://v.imo.bi/K4V96wVihL6Dv9", foto: foto("66686"), lat: -26.307434, lng: -48.849471 },
   { codigo: "68339", titulo: "Edifício Poema", tipo: "Apartamento", bairro: "América", rua: "Rua Aracaju", preco: 1607906, area: 153, dormitorios: 3, suites: 3, vagas: 2, destaque: "Alto padrão, com ambientes integrados e muito verde ao redor.", link: "http://v.imo.bi/ZYxccKVihL6Dwc", foto: foto("68339"), lat: -26.2775, lng: -48.8552, aproximado: true },
   { codigo: "73710", titulo: "Palazzo de Anthurium · 601", tipo: "Apartamento", bairro: "Centro", rua: "Travessa São José", preco: 1920000, area: 153, dormitorios: 2, suites: 2, vagas: 2, condominio: 1086, iptu: 3534, destaque: "Espaço gourmet com churrasqueira a carvão e escritório. Perto do Santos Anjos.", link: "http://v.imo.bi/ZYxcmaVihL6DzQ", foto: foto("73710"), lat: -26.306457, lng: -48.846413 },
-  { codigo: "73597", ativo: false, titulo: "Palazzo de Anthurium · 803", tipo: "Apartamento", bairro: "Centro", rua: "Travessa São José", preco: 1590000, area: 141, dormitorios: 3, suites: 3, vagas: 2, condominio: 937, iptu: 3093, destaque: "Totalmente mobiliado e decorado, com ar central. Perto do Santos Anjos.", link: "http://v.imo.bi/KtWQDKVihL6DHt", foto: foto("73597"), lat: -26.306557, lng: -48.846513 },
-  { codigo: "73715", ativo: false, titulo: "Edifício Soul", tipo: "Apartamento", bairro: "Centro", rua: "Rua Conselheiro Mafra", preco: 1795000, area: 139, dormitorios: 3, suites: 3, vagas: 2, condominio: 1018, iptu: 2086, destaque: "Três suítes perto dos shoppings e da Via Gastronômica.", link: "http://v.imo.bi/K4cYD3VihLbpDp", foto: foto("73715"), lat: -26.305465, lng: -48.84931 },
-  { codigo: "73101", ativo: false, titulo: "Edifício Basel", tipo: "Apartamento", bairro: "América", rua: "Rua Jaraguá", preco: 1723200, area: 136, dormitorios: 3, suites: 3, vagas: 2, destaque: "Três suítes e sacada com churrasqueira a carvão.", link: "http://v.imo.bi/ZDBHJ3VihLbNqs", foto: foto("73101"), lat: -26.297157, lng: -48.854338 },
-  { codigo: "71580", ativo: false, titulo: "Edifício Amaluna", tipo: "Apartamento", bairro: "América", rua: "Rua Otto Boehm", preco: 1816152, area: 142, dormitorios: 3, suites: 3, vagas: 2, destaque: "No ponto mais alto da Otto Boehm, com piscina aquecida.", link: "http://v.imo.bi/wSY8wVihLbpvf", foto: foto("71580"), lat: -26.302022, lng: -48.852945 },
+  { codigo: "73597", incluirAbaixoDaArea: true, titulo: "Palazzo de Anthurium · 803", tipo: "Apartamento", bairro: "Centro", rua: "Travessa São José", preco: 1590000, area: 141, dormitorios: 3, suites: 3, vagas: 2, condominio: 937, iptu: 3093, destaque: "Totalmente mobiliado e decorado, com ar central. Perto do Santos Anjos.", link: "http://v.imo.bi/KtWQDKVihL6DHt", foto: foto("73597"), lat: -26.306557, lng: -48.846513 },
+  { codigo: "73715", incluirAbaixoDaArea: true, titulo: "Edifício Soul", tipo: "Apartamento", bairro: "Centro", rua: "Rua Conselheiro Mafra", preco: 1795000, area: 139, dormitorios: 3, suites: 3, vagas: 2, condominio: 1018, iptu: 2086, destaque: "Três suítes perto dos shoppings e da Via Gastronômica.", link: "http://v.imo.bi/K4cYD3VihLbpDp", foto: foto("73715"), lat: -26.305465, lng: -48.84931 },
+  { codigo: "73101", incluirAbaixoDaArea: true, titulo: "Edifício Basel", tipo: "Apartamento", bairro: "América", rua: "Rua Jaraguá", preco: 1723200, area: 136, dormitorios: 3, suites: 3, vagas: 2, destaque: "Três suítes e sacada com churrasqueira a carvão.", link: "http://v.imo.bi/ZDBHJ3VihLbNqs", foto: foto("73101"), lat: -26.297157, lng: -48.854338 },
+  { codigo: "71580", incluirAbaixoDaArea: true, titulo: "Edifício Amaluna", tipo: "Apartamento", bairro: "América", rua: "Rua Otto Boehm", preco: 1816152, area: 142, dormitorios: 3, suites: 3, vagas: 2, destaque: "No ponto mais alto da Otto Boehm, com piscina aquecida.", link: "http://v.imo.bi/wSY8wVihLbpvf", foto: foto("71580"), lat: -26.302022, lng: -48.852945 },
   { codigo: "KAA", titulo: "Edifício Kaá (Laguna)", tipo: "Apartamento na planta", bairro: "Atiradores", rua: "Rua Pernambuco", preco: 2477179, area: 162, dormitorios: 3, suites: 3, vagas: 2, destaque: "Lançamento da Construtora Laguna, torre de 27 pavimentos; entrega prevista para fev/2027. Valor \"a partir de\".", link: "https://www.manhaesimoveis.com.br/imovel/apartamento-no-edificio-kaa-joinville-atiradores-3-quartos-2-garagens-venda-ref-90/", foto: foto("KAA"), lat: -26.309552, lng: -48.854096, aproximado: true },
   { codigo: "CN43489314", titulo: "Apartamento Euzébio de Queirós", tipo: "Apartamento", bairro: "Atiradores", rua: "Rua Euzébio de Queirós", preco: 1790000, area: 164, dormitorios: 3, suites: 3, vagas: 2, condominio: 890, destaque: "Andar alto, de frente, sol da manhã e semimobiliado, perto da Otto Boehm.", link: "https://www.chavesnamao.com.br/imovel/apartamento-a-venda-3-quartos-com-garagem-sc-joinville-atiradores-227m2-RS1790000/id-43489314/", foto: foto("CN43489314"), lat: -26.3035, lng: -48.8585, aproximado: true },
   { codigo: "CN46556121", titulo: "Apartamento Rua Aracaju", tipo: "Apartamento", bairro: "Santo Antônio", rua: "Rua Aracaju", preco: 1720000, area: 167, dormitorios: 3, suites: 3, vagas: 2, condominio: 870, iptu: 2100, destaque: "Vista livre para a Serra do Mar, depósito usado como escritório; a cinco minutos do Bonja.", link: "https://www.chavesnamao.com.br/imovel/apartamento-a-venda-3-quartos-com-garagem-sc-joinville-santo-antonio-185m2-RS1720000/id-46556121/", foto: foto("CN46556121"), lat: -26.276962, lng: -48.853881, aproximado: true },
@@ -99,9 +104,16 @@ export const todosImoveis: Imovel[] = [
   { codigo: "56653", titulo: "Edifício Inspira", tipo: "Apartamento", bairro: "Santo Antônio", rua: "Rua Visconde de Mauá", preco: 1490000, area: 183, dormitorios: 3, suites: 3, vagas: 1, destaque: "Coworking, brinquedoteca e energia solar no condomínio.", link: "https://www.ottohouse.com.br/imovel/imoveis-a-venda/apartamento/joinville/santo-antonio/apartamento-em-joinville-santo-antonio-edificio-inspira/", foto: foto("56653"), lat: -26.276902, lng: -48.854628, aproximado: true },
   { codigo: "45236", titulo: "Torre América (giardino)", tipo: "Apartamento", bairro: "América", rua: "Rua Visconde de Inhaúma", preco: 1620000, area: 191, dormitorios: 3, suites: 3, vagas: 3, destaque: "Só 12 apartamentos, dois por andar.", link: "https://www.ottohouse.com.br/imovel/imoveis-a-venda/apartamento/joinville/america/apartamento-em-joinville-america-edificio-torre-america-2/", foto: foto("45236"), lat: -26.282807, lng: -48.846054, aproximado: true },
   { codigo: "24167", titulo: "Edifício Alessandra (cobertura)", tipo: "Cobertura", bairro: "Anita Garibaldi", rua: "Rua Paraná", preco: 1100000, area: 323, dormitorios: 4, suites: 1, vagas: 3, condominio: 580, iptu: 2211, destaque: "Cobertura de 323 m² com vista e escritório.", link: "https://www.ottohouse.com.br/imovel/imoveis-a-venda/cobertura/joinville/anita-garibaldi/cobertura-em-joinville-anita-garibaldi-edificio-alessandra/", foto: foto("24167"), lat: -26.313471, lng: -48.847771, aproximado: true },
+  // Seleção original entre 145 e 180 m²
+  { codigo: "73709", titulo: "Edifício Splendore", tipo: "Apartamento", bairro: "Atiradores", rua: "Rua Euzébio de Queirós", preco: 1480000, area: 150, dormitorios: 3, suites: 3, vagas: 2, condominio: 1553, destaque: "Porteira fechada, pronto para morar; lazer com casa na árvore, spa e sauna.", link: "http://v.imo.bi/ZH8c8dVihLbNpL", foto: foto("73709"), lat: -26.3047, lng: -48.8613, aproximado: true },
+  { codigo: "72393", titulo: "Village de Saint Antonie", tipo: "Sobrado", bairro: "Santo Antônio", rua: "Rua Alexandre Humboldt", preco: 1299000, area: 167, dormitorios: 3, suites: 3, vagas: 2, destaque: "Sobrado geminado com três suítes e quintal.", link: "http://v.imo.bi/ZY6JnRVihLbvPM", foto: foto("72393"), lat: -26.266018, lng: -48.855972, aproximado: true },
+  { codigo: "72077", titulo: "Costa del Sol", tipo: "Apartamento", bairro: "América", rua: "Rua Pará", preco: 1831000, area: 161, dormitorios: 3, suites: 3, vagas: 2, destaque: "Novo; suíte com closet, cozinha gourmet e quadra no condomínio.", link: "http://v.imo.bi/wSYHSVihLbpmc", foto: foto("72077"), lat: -26.279521, lng: -48.851661 },
+  { codigo: "73152", titulo: "Morada da Colina", tipo: "Casa em condomínio", bairro: "Glória", rua: "Rua Silva Jardim", preco: 1540000, area: 159, dormitorios: 3, suites: 3, vagas: 2, destaque: "Condomínio fechado em região nobre, perto de comércio e serviços.", link: "http://v.imo.bi/QFAYbVihLbpQa", foto: foto("73152"), lat: -26.300524, lng: -48.865277 },
 ];
 
-export const imoveis: Imovel[] = todosImoveis.filter((i) => i.ativo !== false && i.area >= AREA_MINIMA);
+export const imoveis: Imovel[] = todosImoveis.filter(
+  (i) => i.ativo !== false && (i.area >= AREA_MINIMA || i.incluirAbaixoDaArea)
+);
 
 // Distância em linha reta (metros)
 export function distanciaMetros(a: { lat: number; lng: number }, b: { lat: number; lng: number }) {
