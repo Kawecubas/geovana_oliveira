@@ -13,8 +13,9 @@ export default function CuradoriaBiancaPage() {
     <PaginaImoveisEscolas
       eyebrow="Curadoria exclusiva · Joinville"
       titulo="Bianca, segue uma curadoria das melhores opções para sua família"
-      descricao="Imóveis de alto padrão selecionados perto das melhores escolas de Joinville. Filtre por bairro, metragem, quartos e distância até o colégio, veja tudo no mapa e fale direto com a Geovana."
+      descricao="Imóveis de alto padrão selecionados perto das melhores escolas de Joinville. Siga o mapa mental: escolha o bairro, veja os colégios mais próximos e os imóveis de cada ramo, confira no mapa e fale direto com a Geovana."
       origem="curadoria-bianca"
+      guiadaPara="Bianca"
     />
   );
 }

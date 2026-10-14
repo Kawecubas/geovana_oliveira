@@ -50,8 +50,16 @@ type ImovelComDistancia = Imovel & {
   distanciaEscolaFiltro?: number;
 };
 
-export function MapaImoveisEscolas() {
-  const [bairro, setBairro] = useState("todos");
+type MapaProps = {
+  /** Quando informado, o bairro é controlado de fora (consulta guiada). */
+  bairroSelecionado?: string;
+  onBairroChange?: (bairro: string) => void;
+};
+
+export function MapaImoveisEscolas({ bairroSelecionado, onBairroChange }: MapaProps = {}) {
+  const [bairroInterno, setBairroInterno] = useState("todos");
+  const bairro = bairroSelecionado ?? bairroInterno;
+  const setBairro = (b: string) => (onBairroChange ? onBairroChange(b) : setBairroInterno(b));
   const [areaMin, setAreaMin] = useState(0);
   const [dormMin, setDormMin] = useState(0);
   const [escolaId, setEscolaId] = useState("");
@@ -186,6 +194,17 @@ export function MapaImoveisEscolas() {
     mapaDiv.current?.scrollIntoView({ behavior: "smooth", block: "center" });
   }
 
+  // A consulta guiada pede para abrir um imóvel no mapa
+  useEffect(() => {
+    const abrir = (ev: Event) => {
+      const codigo = (ev as CustomEvent<string>).detail;
+      // espera o mapa redesenhar os marcadores do bairro escolhido
+      window.setTimeout(() => verNoMapa(codigo), 350);
+    };
+    window.addEventListener("curadoria:ver-imovel", abrir);
+    return () => window.removeEventListener("curadoria:ver-imovel", abrir);
+  });
+
   function limpar() {
     setBairro("todos");
     setAreaMin(0);
@@ -201,7 +220,7 @@ export function MapaImoveisEscolas() {
   const rotulo = "mb-1.5 block text-xs font-semibold uppercase tracking-[0.18em] text-textoSuave";
 
   return (
-    <section className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-10 lg:py-14">
+    <section id="mapa-imoveis" className="mx-auto max-w-7xl scroll-mt-24 px-4 py-10 sm:px-6 lg:px-10 lg:py-14">
       {/* Filtros */}
       <div className="rounded-[2rem] bg-begeClaro p-5 shadow-soft sm:p-6">
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-6">

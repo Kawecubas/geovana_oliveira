@@ -3,6 +3,9 @@ import { CtaSection } from "@/components/CtaSection";
 import { PropertyCard } from "@/components/PropertyCard";
 import { getLaunchProperties } from "@/lib/properties";
 
+// Atualiza a lista de imóveis do banco a cada 5 minutos.
+export const revalidate = 300;
+
 export default async function LancamentosPage() {
   const properties = await getLaunchProperties();
 

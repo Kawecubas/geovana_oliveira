@@ -5,6 +5,9 @@ import { PropertyCard } from "@/components/PropertyCard";
 import { getFeaturedProperties } from "@/lib/properties";
 import { getWhatsappUrl } from "@/lib/site";
 
+// Atualiza a lista de imóveis do banco a cada 5 minutos.
+export const revalidate = 300;
+
 const steps = [
   "Entendimento do perfil, momento de vida e objetivo patrimonial",
   "Curadoria de imóveis compatíveis com o que realmente faz sentido",

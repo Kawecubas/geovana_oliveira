@@ -1,7 +1,18 @@
 import { prisma } from "@/lib/prisma";
 
+// Se o banco não responder (por exemplo durante o build na Vercel), a página
+// sai com a lista vazia em vez de derrubar o deploy; ela se atualiza depois.
+async function seguro<T>(consulta: () => Promise<T>, vazio: T): Promise<T> {
+  try {
+    return await consulta();
+  } catch (erro) {
+    console.error("[properties] falha ao consultar o banco:", erro);
+    return vazio;
+  }
+}
+
 export async function getFeaturedProperties() {
-  return prisma.property.findMany({
+  return seguro(() => prisma.property.findMany({
     where: {
       status: "available",
       isFeatured: true,
@@ -17,11 +28,11 @@ export async function getFeaturedProperties() {
       createdAt: "desc",
     },
     take: 6,
-  });
+  }), []);
 }
 
 export async function getLaunchProperties() {
-  return prisma.property.findMany({
+  return seguro(() => prisma.property.findMany({
     where: {
       status: "available",
       isLaunch: true,
@@ -36,11 +47,11 @@ export async function getLaunchProperties() {
     orderBy: {
       createdAt: "desc",
     },
-  });
+  }), []);
 }
 
 export async function getLuxuryProperties() {
-  return prisma.property.findMany({
+  return seguro(() => prisma.property.findMany({
     where: {
       status: "available",
       isLuxury: true,
@@ -55,7 +66,7 @@ export async function getLuxuryProperties() {
     orderBy: {
       createdAt: "desc",
     },
-  });
+  }), []);
 }
 
 export async function getPropertyBySlug(slug: string) {

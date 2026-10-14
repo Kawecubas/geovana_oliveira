@@ -1,4 +1,5 @@
 import { MapaImoveisEscolas } from "@/components/MapaImoveisEscolas";
+import { CuradoriaGuiada } from "@/components/CuradoriaGuiada";
 import { LeadForm } from "@/components/LeadForm";
 import { escolas } from "@/lib/imoveis-escolas";
 
@@ -7,9 +8,11 @@ type Props = {
   titulo: string;
   descricao: string;
   origem: string;
+  /** Nome no centro do mapa mental; quando informado, a página vira consulta guiada. */
+  guiadaPara?: string;
 };
 
-export function PaginaImoveisEscolas({ eyebrow, titulo, descricao, origem }: Props) {
+export function PaginaImoveisEscolas({ eyebrow, titulo, descricao, origem, guiadaPara }: Props) {
   return (
     <main className="bg-bege text-cafe">
       <section className="bg-gradient-to-br from-cafe via-marrom to-[#8A6A3D] px-4 py-14 text-begeClaro sm:px-6 lg:px-10 lg:py-20">
@@ -36,7 +39,7 @@ export function PaginaImoveisEscolas({ eyebrow, titulo, descricao, origem }: Pro
         </div>
       </section>
 
-      <MapaImoveisEscolas />
+      {guiadaPara ? <CuradoriaGuiada nomeCentro={guiadaPara} /> : <MapaImoveisEscolas />}
 
       <section className="mx-auto max-w-7xl px-4 pb-6 sm:px-6 lg:px-10">
         <h2 className="text-2xl font-semibold sm:text-3xl">Colégios no mapa</h2>
@@ -62,7 +65,7 @@ export function PaginaImoveisEscolas({ eyebrow, titulo, descricao, origem }: Pro
         </div>
         <p className="mt-6 text-xs leading-5 text-textoSuave">
           Distâncias em linha reta, calculadas a partir da localização dos endereços no OpenStreetMap; alguns imóveis têm
-          localização aproximada na rua. Valores dos anúncios em setembro de 2026, sujeitos a alteração.
+          localização aproximada na rua. Valores dos anúncios em outubro de 2026, sujeitos a alteração.
         </p>
       </section>
 
