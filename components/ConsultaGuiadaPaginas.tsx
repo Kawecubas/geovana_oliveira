@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { Etapas } from "@/components/CuradoriaGuiada";
 import { FichaCorpo } from "@/components/DetalhesImovel";
 import { MapaBairroControlado } from "@/components/MapaBairroControlado";
+import { GaleriaFotos } from "@/components/GaleriaFotos";
 import { VALOR_DESTAQUE } from "@/lib/imoveis-escolas";
 import { distTexto, moeda, moedaCurta, ramoPorSlug, ramos, slugImovel } from "@/lib/curadoria";
 import { getWhatsappUrl } from "@/lib/site";
@@ -181,15 +182,19 @@ export function PaginaImovel({ nome, basePath, slug, imovelSlug }: Base & { slug
         <Etapas passo={3} />
 
         <article className="mt-6 overflow-hidden rounded-[2rem] bg-begeClaro shadow-soft">
-          <div className="relative">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src={imovel.foto} alt={imovel.titulo} className="h-60 w-full object-cover sm:h-96" />
-            {imovel.preco < VALOR_DESTAQUE && (
-              <span className="absolute left-4 top-4 rounded-full bg-[#A9823F] px-3 py-1 text-xs font-semibold uppercase tracking-[0.12em] text-begeClaro">
-                Abaixo de R$ 2 mi
-              </span>
-            )}
-          </div>
+          <GaleriaFotos
+            codigo={imovel.codigo}
+            fotoPrincipal={imovel.foto}
+            titulo={imovel.titulo}
+            altura="h-64 sm:h-[28rem]"
+            selo={
+              imovel.preco < VALOR_DESTAQUE ? (
+                <span className="pointer-events-none absolute left-4 top-4 rounded-full bg-[#A9823F] px-3 py-1 text-xs font-semibold uppercase tracking-[0.12em] text-begeClaro">
+                  Abaixo de R$ 2 mi
+                </span>
+              ) : null
+            }
+          />
           <div className="p-5 sm:p-8">
             <FichaCorpo imovel={imovel} />
             <div className="mt-6 flex flex-wrap gap-2">
@@ -201,14 +206,16 @@ export function PaginaImovel({ nome, basePath, slug, imovelSlug }: Base & { slug
               >
                 Tenho interesse
               </a>
-              <a
-                href={imovel.link}
-                target="_blank"
-                rel="noopener"
-                className="rounded-full border border-areia px-5 py-2.5 text-sm font-semibold hover:bg-bege"
-              >
-                Fotos e anúncio
-              </a>
+<a
+              href={getWhatsappUrl(
+                `Olá, Geovana. Gostaria de receber mais informações sobre o imóvel ${imovel.titulo} (cód. ${imovel.codigo}): planta, condomínio e disponibilidade de visita.`
+              )}
+              target="_blank"
+              rel="noopener"
+              className="rounded-full border border-[#25D366] px-5 py-2.5 text-sm font-semibold text-cafe hover:bg-[#25D366]/10"
+            >
+              Mais informações pelo WhatsApp
+            </a>
               <Link
                 href={`${basePath}/${slug}?imovel=${encodeURIComponent(imovel.codigo)}#mapa-imoveis`}
                 className="rounded-full border border-areia px-5 py-2.5 text-sm font-semibold hover:bg-bege"

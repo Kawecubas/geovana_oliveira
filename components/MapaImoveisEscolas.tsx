@@ -175,7 +175,7 @@ export function MapaImoveisEscolas({ bairroSelecionado, onBairroChange }: MapaPr
           : `${distTexto(i.escolaMaisProxima.distancia)} do ${i.escolaMaisProxima.nome}`;
       const m = L.marker([i.lat, i.lng], { icon: icone, zIndexOffset: 1000 })
         .bindPopup(
-          `<div style="width:220px"><img src="${i.foto}" alt="${i.titulo}" style="width:220px;height:130px;object-fit:cover;border-radius:10px"/><div style="margin-top:8px;font:600 15px Inter,Arial,sans-serif">${i.titulo}</div><div style="font:13px Inter,Arial,sans-serif;color:#6F6258">${i.tipo} · ${i.bairro}</div><div style="margin-top:4px;font:700 15px Inter,Arial,sans-serif">${moeda(i.preco)}</div>${i.preco < VALOR_DESTAQUE ? '<div style="display:inline-block;margin-top:4px;background:#A9823F;color:#FFFDF8;border-radius:9999px;padding:2px 8px;font:600 11px Inter,Arial,sans-serif">Abaixo de R$ 2 mi</div>' : ""}<div style="font:13px Inter,Arial,sans-serif">${i.area} m² · ${i.dormitorios} dorm. (${i.suites} suítes) · ${i.vagas} vagas</div><div style="margin-top:4px;font:12px Inter,Arial,sans-serif;color:#6F6258">${distTxt} (linha reta)</div><button type="button" onclick="window.dispatchEvent(new CustomEvent('curadoria:detalhes',{detail:'${i.codigo}'}))" style="display:block;margin-top:8px;padding:6px 12px;border:0;border-radius:9999px;background:#2B1E17;color:#D8C39A;font:600 13px Inter,Arial,sans-serif;cursor:pointer">Ver imóvel e arredores</button><a href="${i.link}" target="_blank" rel="noopener" style="display:inline-block;margin-top:6px;font:600 13px Inter,Arial,sans-serif;color:#A9823F">Fotos e anúncio →</a></div>`
+          `<div style="width:220px"><img src="${i.foto}" alt="${i.titulo}" style="width:220px;height:130px;object-fit:cover;border-radius:10px"/><div style="margin-top:8px;font:600 15px Inter,Arial,sans-serif">${i.titulo}</div><div style="font:13px Inter,Arial,sans-serif;color:#6F6258">${i.tipo} · ${i.bairro}</div><div style="margin-top:4px;font:700 15px Inter,Arial,sans-serif">${moeda(i.preco)}</div>${i.preco < VALOR_DESTAQUE ? '<div style="display:inline-block;margin-top:4px;background:#A9823F;color:#FFFDF8;border-radius:9999px;padding:2px 8px;font:600 11px Inter,Arial,sans-serif">Abaixo de R$ 2 mi</div>' : ""}<div style="font:13px Inter,Arial,sans-serif">${i.area} m² · ${i.dormitorios} dorm. (${i.suites} suítes) · ${i.vagas} vagas</div><div style="margin-top:4px;font:12px Inter,Arial,sans-serif;color:#6F6258">${distTxt} (linha reta)</div><button type="button" onclick="window.dispatchEvent(new CustomEvent('curadoria:detalhes',{detail:'${i.codigo}'}))" style="display:block;margin-top:8px;padding:6px 12px;border:0;border-radius:9999px;background:#2B1E17;color:#D8C39A;font:600 13px Inter,Arial,sans-serif;cursor:pointer">Ver fotos e arredores</button></div>`
         )
         .addTo(camadaImoveis.current);
       marcadores.current[i.codigo] = m;
@@ -385,14 +385,12 @@ export function MapaImoveisEscolas({ bairroSelecionado, onBairroChange }: MapaPr
                     >
                       Ver no mapa
                     </button>
-                    <a
-                      href={i.link}
-                      target="_blank"
-                      rel="noopener"
+                    <button
+                      onClick={() => abrirDetalhesImovel(i.codigo)}
                       className="rounded-full border border-areia px-4 py-2 text-sm font-semibold text-cafe hover:bg-bege"
                     >
                       Fotos
-                    </a>
+                    </button>
                     <a
                       href={getWhatsappUrl(`Olá, Geovana. Tenho interesse no imóvel ${i.titulo} (cód. ${i.codigo}).`)}
                       target="_blank"

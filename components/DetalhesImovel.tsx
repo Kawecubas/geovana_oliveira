@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { escolas, imoveis, distanciaMetros, VALOR_DESTAQUE, type Imovel } from "@/lib/imoveis-escolas";
 import { TIPOS_LUGAR, lugaresProximos, type TipoLugar } from "@/lib/proximidades";
 import { getWhatsappUrl } from "@/lib/site";
+import { GaleriaFotos } from "@/components/GaleriaFotos";
 
 /** Abre a ficha do imóvel de qualquer lugar da página. */
 export function abrirDetalhesImovel(codigo: string) {
@@ -163,17 +164,21 @@ export function DetalhesImovelHost() {
         onClick={(e) => e.stopPropagation()}
       >
         <div className="relative">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={imovel.foto} alt={imovel.titulo} className="h-56 w-full object-cover sm:h-72" />
+          <GaleriaFotos
+            codigo={imovel.codigo}
+            fotoPrincipal={imovel.foto}
+            titulo={imovel.titulo}
+            altura="h-60 sm:h-96"
+          />
           <button
             onClick={() => setCodigo(null)}
             aria-label="Fechar"
-            className="absolute right-4 top-4 flex h-10 w-10 items-center justify-center rounded-full bg-begeClaro/90 text-xl text-cafe shadow-soft"
+            className="absolute right-4 top-4 z-20 flex h-10 w-10 items-center justify-center rounded-full bg-begeClaro/90 text-xl text-cafe shadow-soft"
           >
             ×
           </button>
           {imovel.preco < VALOR_DESTAQUE && (
-            <span className="absolute left-4 top-4 rounded-full bg-[#A9823F] px-3 py-1 text-xs font-semibold uppercase tracking-[0.12em] text-begeClaro">
+            <span className="pointer-events-none absolute left-4 top-4 rounded-full bg-[#A9823F] px-3 py-1 text-xs font-semibold uppercase tracking-[0.12em] text-begeClaro">
               Abaixo de R$ 2 mi
             </span>
           )}
@@ -188,13 +193,15 @@ export function DetalhesImovelHost() {
             >
               Ver no mapa
             </button>
-            <a
-              href={imovel.link}
+<a
+              href={getWhatsappUrl(
+                `Olá, Geovana. Gostaria de receber mais informações sobre o imóvel ${imovel.titulo} (cód. ${imovel.codigo}): planta, condomínio e disponibilidade de visita.`
+              )}
               target="_blank"
               rel="noopener"
-              className="rounded-full border border-areia px-5 py-2.5 text-sm font-semibold text-cafe hover:bg-bege"
+              className="rounded-full border border-[#25D366] px-5 py-2.5 text-sm font-semibold text-cafe hover:bg-[#25D366]/10"
             >
-              Fotos e anúncio
+              Mais informações pelo WhatsApp
             </a>
             <a
               href={getWhatsappUrl(`Olá, Geovana. Tenho interesse no imóvel ${imovel.titulo} (cód. ${imovel.codigo}).`)}
