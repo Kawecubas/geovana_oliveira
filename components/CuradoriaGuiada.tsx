@@ -4,6 +4,7 @@ import { useMemo, useState } from "react";
 import { MapaImoveisEscolas } from "@/components/MapaImoveisEscolas";
 import { escolas, imoveis, distanciaMetros, VALOR_DESTAQUE, type Imovel } from "@/lib/imoveis-escolas";
 import { getWhatsappUrl } from "@/lib/site";
+import { abrirDetalhesImovel } from "@/components/DetalhesImovel";
 
 type Props = {
   /** Nome que aparece no centro do mapa mental. */
@@ -144,7 +145,7 @@ export function CuradoriaGuiada({ nomeCentro }: Props) {
           })}
         </ol>
 
-        <div className="mt-6 grid gap-6 lg:grid-cols-[1.4fr_1fr]">
+        <div className="mt-6 grid grid-cols-1 gap-6 lg:grid-cols-[1.4fr_1fr] [&>*]:min-w-0">
           {/* Mapa mental (telas médias e grandes) */}
           <div className="hidden self-start rounded-[2rem] bg-begeClaro p-4 shadow-soft md:block lg:sticky lg:top-24">
             <svg viewBox={`0 0 ${W} ${H}`} className="h-auto w-full" role="group" aria-label="Mapa mental dos bairros">
@@ -241,7 +242,7 @@ export function CuradoriaGuiada({ nomeCentro }: Props) {
           </div>
 
           {/* Bairros em lista (celular) */}
-          <div className="-mx-4 flex gap-2 overflow-x-auto px-4 pb-1 md:hidden">
+          <div className="flex min-w-0 gap-2 overflow-x-auto pb-1 md:hidden">
             <button
               onClick={() => setBairro("todos")}
               className={`shrink-0 rounded-full px-4 py-2 text-sm font-semibold ${
@@ -343,6 +344,13 @@ export function CuradoriaGuiada({ nomeCentro }: Props) {
                                 Abaixo de R$ 2 mi
                               </span>
                             )}
+                            <button
+                              onClick={() => abrirDetalhesImovel(i.codigo)}
+                              style={{ fontSize: 12 }}
+                              className="rounded-full bg-cafe px-2.5 py-0.5 font-semibold text-champagne hover:bg-marrom"
+                            >
+                              Ver imóvel
+                            </button>
                             <button
                               onClick={() => irParaMapa(i.codigo)}
                               style={{ fontSize: 12 }}
