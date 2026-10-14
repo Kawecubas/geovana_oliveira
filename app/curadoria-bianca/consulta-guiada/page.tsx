@@ -16,6 +16,7 @@ export default function CuradoriaBiancaGuiadaPage() {
       descricao="Siga o mapa mental: escolha o bairro, veja os colégios mais próximos e os imóveis de cada ramo, confira no mapa e fale direto com a Geovana."
       origem="curadoria-bianca-guiada"
       guiadaPara="Bianca"
+      guiadaBase="/curadoria-bianca/consulta-guiada"
       linkAlternativo={{ href: "/curadoria-bianca", texto: "Prefere filtrar por conta própria? Ver a lista completa →" }}
     />
   );

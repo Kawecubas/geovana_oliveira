@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { escolas, imoveis, distanciaMetros, VALOR_DESTAQUE } from "@/lib/imoveis-escolas";
+import { escolas, imoveis, distanciaMetros, VALOR_DESTAQUE, type Imovel } from "@/lib/imoveis-escolas";
 import { TIPOS_LUGAR, lugaresProximos, type TipoLugar } from "@/lib/proximidades";
 import { getWhatsappUrl } from "@/lib/site";
 
@@ -33,6 +33,92 @@ const BUSCA_GOOGLE: Record<TipoLugar, string> = {
   academia: "academia",
 };
 
+
+/** Conteúdo da ficha (usado no modal e na página do imóvel). */
+export function FichaCorpo({ imovel }: { imovel: Imovel }) {
+  const vistos = new Set<string>();
+  const escolasPerto = escolas
+    .map((e) => ({ ...e, distancia: distanciaMetros(imovel, e) }))
+    .sort((a, b) => a.distancia - b.distancia)
+    .filter((e) => (vistos.has(e.nome) ? false : (vistos.add(e.nome), true)))
+    .slice(0, 3);
+  return (
+    <>
+          <p className="text-xs font-semibold uppercase tracking-[0.18em] text-ouroFosco">
+        {imovel.tipo} · {imovel.bairro} · {imovel.rua}
+      </p>
+      <div className="mt-1 flex flex-wrap items-end justify-between gap-2">
+        <h3 className="text-2xl font-semibold sm:text-3xl">{imovel.titulo}</h3>
+        <p className="text-2xl font-semibold">{moeda(imovel.preco)}</p>
+      </div>
+      <p className="mt-2 text-sm text-texto">
+        {imovel.area} m² · {imovel.dormitorios} dorm. ({imovel.suites} {imovel.suites === 1 ? "suíte" : "suítes"}) ·{" "}
+        {imovel.vagas} {imovel.vagas === 1 ? "vaga" : "vagas"}
+        {imovel.condominio ? ` · Cond. ${moeda(imovel.condominio)}` : ""}
+        {imovel.iptu ? ` · IPTU ${moeda(imovel.iptu)}` : ""}
+      </p>
+      <p className="mt-2 text-sm leading-6 text-textoSuave">{imovel.destaque}</p>
+
+      <h4 className="mt-6 text-xs font-semibold uppercase tracking-[0.2em] text-ouroFosco">Colégios mais próximos</h4>
+      <div className="mt-2 grid gap-2 sm:grid-cols-3">
+        {escolasPerto.map((e) => (
+          <div key={e.id} className="rounded-2xl bg-cafe px-4 py-3 text-begeClaro">
+            <span className="block text-sm font-semibold">{e.nome}</span>
+            <span className="block text-xs text-bege/75">
+              {distTexto(e.distancia)} · ENEM {e.enem}
+            </span>
+          </div>
+        ))}
+      </div>
+
+      <h4 className="mt-6 text-xs font-semibold uppercase tracking-[0.2em] text-ouroFosco">No dia a dia, perto do imóvel</h4>
+      <div className="mt-2 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+        {TIPOS_LUGAR.map(({ tipo, titulo }) => {
+          const lista = lugaresProximos(imovel, tipo);
+          return (
+            <div key={tipo} className="rounded-2xl bg-bege p-4">
+              <p className="font-semibold">
+                <span aria-hidden className="mr-1.5">
+                  {ICONES[tipo]}
+                </span>
+                {titulo}
+              </p>
+              {lista.length === 0 ? (
+                <p className="mt-2 text-sm text-textoSuave">Nenhum mapeado a até 2 km.</p>
+              ) : (
+                <ul className="mt-2 space-y-2">
+                  {lista.map((l) => (
+                    <li key={l.nome + l.lat} className="text-sm leading-5">
+                      <span className="block text-cafe">{l.nome}</span>
+                      <span className="block text-xs text-textoSuave">
+                        {distTexto(l.distancia)} · {aPe(l.distancia)}
+                      </span>
+                    </li>
+                  ))}
+                </ul>
+              )}
+              <a
+                href={`https://www.google.com/maps/search/${BUSCA_GOOGLE[tipo]}/@${imovel.lat},${imovel.lng},16z`}
+                target="_blank"
+                rel="noopener"
+                style={{ fontSize: 12 }}
+                className="mt-3 inline-block font-semibold text-ouroFosco hover:underline"
+              >
+                Ver todos no Google Maps →
+              </a>
+            </div>
+          );
+        })}
+      </div>
+      <p className="mt-3 text-xs leading-5 text-textoSuave">
+        Distâncias em linha reta a partir da localização do imóvel{imovel.aproximado ? " (aproximada na rua)" : ""}.
+        Lugares mapeados no OpenStreetMap; a lista pode não incluir todos.
+      </p>
+
+    </>
+  );
+}
+
 export function DetalhesImovelHost() {
   const [codigo, setCodigo] = useState<string | null>(null);
   const imovel = imoveis.find((i) => i.codigo === codigo);
@@ -56,13 +142,6 @@ export function DetalhesImovelHost() {
   }, [imovel]);
 
   if (!imovel) return null;
-
-  const vistos = new Set<string>();
-  const escolasPerto = escolas
-    .map((e) => ({ ...e, distancia: distanciaMetros(imovel, e) }))
-    .sort((a, b) => a.distancia - b.distancia)
-    .filter((e) => (vistos.has(e.nome) ? false : (vistos.add(e.nome), true)))
-    .slice(0, 3);
 
   function verNoMapa() {
     const c = imovel!.codigo;
@@ -101,77 +180,7 @@ export function DetalhesImovelHost() {
         </div>
 
         <div className="p-5 sm:p-8">
-          <p className="text-xs font-semibold uppercase tracking-[0.18em] text-ouroFosco">
-            {imovel.tipo} · {imovel.bairro} · {imovel.rua}
-          </p>
-          <div className="mt-1 flex flex-wrap items-end justify-between gap-2">
-            <h3 className="text-2xl font-semibold sm:text-3xl">{imovel.titulo}</h3>
-            <p className="text-2xl font-semibold">{moeda(imovel.preco)}</p>
-          </div>
-          <p className="mt-2 text-sm text-texto">
-            {imovel.area} m² · {imovel.dormitorios} dorm. ({imovel.suites} {imovel.suites === 1 ? "suíte" : "suítes"}) ·{" "}
-            {imovel.vagas} {imovel.vagas === 1 ? "vaga" : "vagas"}
-            {imovel.condominio ? ` · Cond. ${moeda(imovel.condominio)}` : ""}
-            {imovel.iptu ? ` · IPTU ${moeda(imovel.iptu)}` : ""}
-          </p>
-          <p className="mt-2 text-sm leading-6 text-textoSuave">{imovel.destaque}</p>
-
-          <h4 className="mt-6 text-xs font-semibold uppercase tracking-[0.2em] text-ouroFosco">Colégios mais próximos</h4>
-          <div className="mt-2 grid gap-2 sm:grid-cols-3">
-            {escolasPerto.map((e) => (
-              <div key={e.id} className="rounded-2xl bg-cafe px-4 py-3 text-begeClaro">
-                <span className="block text-sm font-semibold">{e.nome}</span>
-                <span className="block text-xs text-bege/75">
-                  {distTexto(e.distancia)} · ENEM {e.enem}
-                </span>
-              </div>
-            ))}
-          </div>
-
-          <h4 className="mt-6 text-xs font-semibold uppercase tracking-[0.2em] text-ouroFosco">No dia a dia, perto do imóvel</h4>
-          <div className="mt-2 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-            {TIPOS_LUGAR.map(({ tipo, titulo }) => {
-              const lista = lugaresProximos(imovel, tipo);
-              return (
-                <div key={tipo} className="rounded-2xl bg-bege p-4">
-                  <p className="font-semibold">
-                    <span aria-hidden className="mr-1.5">
-                      {ICONES[tipo]}
-                    </span>
-                    {titulo}
-                  </p>
-                  {lista.length === 0 ? (
-                    <p className="mt-2 text-sm text-textoSuave">Nenhum mapeado a até 2 km.</p>
-                  ) : (
-                    <ul className="mt-2 space-y-2">
-                      {lista.map((l) => (
-                        <li key={l.nome + l.lat} className="text-sm leading-5">
-                          <span className="block text-cafe">{l.nome}</span>
-                          <span className="block text-xs text-textoSuave">
-                            {distTexto(l.distancia)} · {aPe(l.distancia)}
-                          </span>
-                        </li>
-                      ))}
-                    </ul>
-                  )}
-                  <a
-                    href={`https://www.google.com/maps/search/${BUSCA_GOOGLE[tipo]}/@${imovel.lat},${imovel.lng},16z`}
-                    target="_blank"
-                    rel="noopener"
-                    style={{ fontSize: 12 }}
-                    className="mt-3 inline-block font-semibold text-ouroFosco hover:underline"
-                  >
-                    Ver todos no Google Maps →
-                  </a>
-                </div>
-              );
-            })}
-          </div>
-          <p className="mt-3 text-xs leading-5 text-textoSuave">
-            Distâncias em linha reta a partir da localização do imóvel{imovel.aproximado ? " (aproximada na rua)" : ""}.
-            Lugares mapeados no OpenStreetMap; a lista pode não incluir todos.
-          </p>
-
+          <FichaCorpo imovel={imovel} />
           <div className="mt-6 flex flex-wrap gap-2">
             <button
               onClick={verNoMapa}

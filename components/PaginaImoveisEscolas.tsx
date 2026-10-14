@@ -10,23 +10,34 @@ type Props = {
   origem: string;
   /** Nome no centro do mapa mental; quando informado, a página vira consulta guiada. */
   guiadaPara?: string;
+  /** Caminho base das subpáginas da consulta guiada. */
+  guiadaBase?: string;
   /** Botão no banner levando à outra versão da página. */
   linkAlternativo?: { href: string; texto: string };
 };
 
-export function PaginaImoveisEscolas({ eyebrow, titulo, descricao, origem, guiadaPara, linkAlternativo }: Props) {
+export function PaginaImoveisEscolas({ eyebrow, titulo, descricao, origem, guiadaPara, guiadaBase, linkAlternativo }: Props) {
+  const compacto = Boolean(guiadaPara);
   return (
     <main className="bg-bege text-cafe">
-      <section className="bg-gradient-to-br from-cafe via-marrom to-[#8A6A3D] px-4 py-14 text-begeClaro sm:px-6 lg:px-10 lg:py-20">
+      <section
+        className={`bg-gradient-to-br from-cafe via-marrom to-[#8A6A3D] px-4 text-begeClaro sm:px-6 lg:px-10 lg:py-20 ${
+          compacto ? "py-8 sm:py-14" : "py-14"
+        }`}
+      >
         <div className="mx-auto flex max-w-7xl flex-col-reverse gap-8 md:flex-row md:items-center md:justify-between md:gap-12">
           <div className="md:max-w-3xl">
             <p className="text-xs font-semibold uppercase tracking-[0.3em] text-ouro sm:text-sm">
               {eyebrow}
             </p>
-            <h1 className="mt-4 text-3xl font-semibold leading-tight sm:text-4xl md:text-5xl lg:text-6xl">
+            <h1
+              className={`mt-4 font-semibold leading-tight sm:text-4xl md:text-5xl lg:text-6xl ${compacto ? "text-2xl" : "text-3xl"}`}
+            >
               {titulo}
             </h1>
-            <p className="mt-5 max-w-2xl text-base leading-7 text-bege/85 sm:text-lg sm:leading-8">
+            <p
+              className={`mt-5 max-w-2xl text-base leading-7 text-bege/85 sm:text-lg sm:leading-8 ${compacto ? "hidden sm:block" : ""}`}
+            >
               {descricao}
             </p>
             {linkAlternativo && (
@@ -38,7 +49,11 @@ export function PaginaImoveisEscolas({ eyebrow, titulo, descricao, origem, guiad
               </a>
             )}
           </div>
-          <div className="w-44 shrink-0 self-start rounded-[1.5rem] bg-begeClaro p-4 shadow-premium sm:w-56 md:w-72 md:self-center md:rounded-[2rem] md:p-6">
+          <div
+            className={`w-44 shrink-0 self-start rounded-[1.5rem] bg-begeClaro p-4 shadow-premium sm:w-56 md:w-72 md:self-center md:rounded-[2rem] md:p-6 ${
+              compacto ? "hidden md:block" : ""
+            }`}
+          >
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src="/images/logo-geovana.png"
@@ -49,7 +64,11 @@ export function PaginaImoveisEscolas({ eyebrow, titulo, descricao, origem, guiad
         </div>
       </section>
 
-      {guiadaPara ? <CuradoriaGuiada nomeCentro={guiadaPara} /> : <MapaImoveisEscolas />}
+      {guiadaPara ? (
+        <CuradoriaGuiada nomeCentro={guiadaPara} basePath={guiadaBase ?? ""} />
+      ) : (
+        <MapaImoveisEscolas />
+      )}
 
       <section className="mx-auto max-w-7xl px-4 pb-6 sm:px-6 lg:px-10">
         <h2 className="text-2xl font-semibold sm:text-3xl">Colégios no mapa</h2>
